@@ -1,33 +1,42 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import Connection from './components/Connection'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from 'firebase/firestore';
+import MyPage from './components/MyPage';
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+export const firebaseConfig = {
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: `${import.meta.env.VITE_PROJECT_ID}.firebaseapp.com`,
+  databaseURL: `https://${import.meta.env.VITE_DATABASE_NAME}.firebaseio.com`,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: `${import.meta.env.VITE_PROJECT_ID}.appspot.com`,
+  messagingSenderId: import.meta.env.VITE_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: `G-${import.meta.env.VITE_MEASURMENT_ID}`,
+}
+
+// Initialize Firebase
+export const firebase = initializeApp(firebaseConfig);
+export const auth = getAuth(firebase)
+export const db = getFirestore(firebase)
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Connection/>} />
+          <Route path='/mypage/:idPatient' element={<MyPage/>} />
+        </Routes>
+      </BrowserRouter>
   )
 }
 
